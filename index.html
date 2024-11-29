@@ -1,71 +1,95 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iFilter回避のためのプロキシページ</title>
+    <title>Programming Learning Site</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
             background-color: #f4f4f4;
         }
-        h1 {
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem 0;
             text-align: center;
         }
-        .form-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
+        nav {
+            background: #444;
+            color: #fff;
+            padding: 0.5rem;
+            text-align: center;
         }
-        input[type="text"] {
-            width: 70%;
-            padding: 10px;
-            font-size: 16px;
+        nav a {
+            color: #fff;
+            margin: 0 1rem;
+            text-decoration: none;
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
+        nav a:hover {
+            text-decoration: underline;
         }
-        button:hover {
-            background-color: #45a049;
+        .container {
+            padding: 2rem;
         }
-        iframe {
-            width: 100%;
-            height: 600px;
-            border: none;
-            margin-top: 20px;
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 2rem;
         }
     </style>
 </head>
 <body>
-    <h1>iFilter回避用プロキシツール</h1>
-    <p>URLを入力して、iFilterを回避してウェブサイトにアクセスできます。</p>
-
-    <div class="form-container">
-        <input type="text" id="urlInput" placeholder="アクセスしたいURLを入力してください (例: https://example.com)">
-        <button onclick="loadWebsite()">アクセス</button>
+    <header>
+        <h1>Welcome to Programming Learning Site</h1>
+        <p>Your gateway to mastering coding skills!</p>
+    </header>
+    <nav>
+        <a href="#languages">Languages</a>
+        <a href="#resources">Resources</a>
+        <a href="#contact">Contact</a>
+    </nav>
+    <div class="container">
+        <section id="languages">
+            <h2>Programming Languages</h2>
+            <ul>
+                <li><strong>HTML:</strong> The foundation of web development.</li>
+                <li><strong>CSS:</strong> For styling and designing web pages.</li>
+                <li><strong>JavaScript:</strong> Adds interactivity to websites.</li>
+                <li><strong>Python:</strong> Great for beginners and data science.</li>
+                <li><strong>Java:</strong> Popular for building enterprise applications.</li>
+            </ul>
+        </section>
+        <section id="resources">
+            <h2>Learning Resources</h2>
+            <p>Here are some great resources to start learning:</p>
+            <ul>
+                <li><a href="https://www.w3schools.com/" target="_blank">W3Schools</a> - Tutorials for web development.</li>
+                <li><a href="https://developer.mozilla.org/" target="_blank">MDN Web Docs</a> - Comprehensive web documentation.</li>
+                <li><a href="https://www.freecodecamp.org/" target="_blank">freeCodeCamp</a> - Interactive coding exercises.</li>
+                <li><a href="https://www.codecademy.com/" target="_blank">Codecademy</a> - Beginner-friendly coding courses.</li>
+            </ul>
+        </section>
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <form>
+                <label for="name">Name:</label><br>
+                <input type="text" id="name" name="name" required><br><br>
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email" required><br><br>
+                <label for="message">Message:</label><br>
+                <textarea id="message" name="message" rows="5" required></textarea><br><br>
+                <button type="submit">Send</button>
+            </form>
+        </section>
     </div>
-
-    <iframe id="webFrame" src=""></iframe>
-
-    <script>
-        function loadWebsite() {
-            var url = document.getElementById('urlInput').value;
-
-            // 入力されたURLが有効かどうか確認
-            if (url && url.startsWith('http')) {
-                var iframe = document.getElementById('webFrame');
-                iframe.src = 'https://www.hidemyass.com/proxy?url=' + encodeURIComponent(url);
-            } else {
-                alert('有効なURLを入力してください（例: https://example.com）。');
-            }
-        }
-    </script>
+    <footer>
+        <p>&copy; 2024 Programming Learning Site. All rights reserved.</p>
+    </footer>
 </body>
 </html>
