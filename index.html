@@ -1,95 +1,201 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Programming Learning Site</title>
+    <title>大富豪 - CPU対戦付き</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
+            text-align: center;
+            background-color: #004d40;
+            color: white;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
         }
-        header {
-            background: #333;
-            color: #fff;
-            padding: 1rem 0;
-            text-align: center;
+        h1 {
+            margin: 20px;
+            color: #ffe082;
         }
-        nav {
-            background: #444;
-            color: #fff;
-            padding: 0.5rem;
-            text-align: center;
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        nav a {
-            color: #fff;
-            margin: 0 1rem;
-            text-decoration: none;
+        .hand, .table {
+            display: flex;
+            margin: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
-        nav a:hover {
-            text-decoration: underline;
+        .card {
+            width: 80px;
+            height: 120px;
+            border-radius: 10px;
+            margin: 5px;
+            background-color: white;
+            color: black;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.5s;
         }
-        .container {
-            padding: 2rem;
+        .card.animate {
+            transform: scale(1.5);
+            opacity: 0;
         }
-        footer {
-            background: #333;
-            color: #fff;
-            text-align: center;
-            padding: 1rem 0;
-            margin-top: 2rem;
+        .disabled {
+            background-color: gray;
+            color: white;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .special {
+            background-color: gold;
+        }
+        .result {
+            font-size: 24px;
+            margin: 20px;
+        }
+        button {
+            background-color: #009688;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00796b;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to Programming Learning Site</h1>
-        <p>Your gateway to mastering coding skills!</p>
-    </header>
-    <nav>
-        <a href="#languages">Languages</a>
-        <a href="#resources">Resources</a>
-        <a href="#contact">Contact</a>
-    </nav>
-    <div class="container">
-        <section id="languages">
-            <h2>Programming Languages</h2>
-            <ul>
-                <li><strong>HTML:</strong> The foundation of web development.</li>
-                <li><strong>CSS:</strong> For styling and designing web pages.</li>
-                <li><strong>JavaScript:</strong> Adds interactivity to websites.</li>
-                <li><strong>Python:</strong> Great for beginners and data science.</li>
-                <li><strong>Java:</strong> Popular for building enterprise applications.</li>
-            </ul>
-        </section>
-        <section id="resources">
-            <h2>Learning Resources</h2>
-            <p>Here are some great resources to start learning:</p>
-            <ul>
-                <li><a href="https://www.w3schools.com/" target="_blank">W3Schools</a> - Tutorials for web development.</li>
-                <li><a href="https://developer.mozilla.org/" target="_blank">MDN Web Docs</a> - Comprehensive web documentation.</li>
-                <li><a href="https://www.freecodecamp.org/" target="_blank">freeCodeCamp</a> - Interactive coding exercises.</li>
-                <li><a href="https://www.codecademy.com/" target="_blank">Codecademy</a> - Beginner-friendly coding courses.</li>
-            </ul>
-        </section>
-        <section id="contact">
-            <h2>Contact Us</h2>
-            <form>
-                <label for="name">Name:</label><br>
-                <input type="text" id="name" name="name" required><br><br>
-                <label for="email">Email:</label><br>
-                <input type="email" id="email" name="email" required><br><br>
-                <label for="message">Message:</label><br>
-                <textarea id="message" name="message" rows="5" required></textarea><br><br>
-                <button type="submit">Send</button>
-            </form>
-        </section>
+
+<h1>大富豪 - CPU対戦付き</h1>
+<div class="game-container">
+    <div id="table" class="table">
+        <p>場にカードはありません</p>
     </div>
-    <footer>
-        <p>&copy; 2024 Programming Learning Site. All rights reserved.</p>
-    </footer>
+    <div id="hand" class="hand">
+        <!-- プレイヤーの手札 -->
+    </div>
+    <button onclick="resetGame()">ゲームリセット</button>
+    <div id="result" class="result"></div>
+</div>
+
+<script>
+    const suits = ["♥", "♦", "♠", "♣"];
+    const ranks = ["3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A", "2"];
+    let deck = [];
+    let playerHand = [];
+    let cpuHand = [];
+    let tableCard = null;
+
+    function resetGame() {
+        deck = shuffle(generateDeck());
+        playerHand = deck.slice(0, 8);
+        cpuHand = deck.slice(8, 16);
+        tableCard = null;
+        document.getElementById("result").textContent = "";
+        updateUI();
+    }
+
+    function generateDeck() {
+        const deck = [];
+        for (const suit of suits) {
+            for (const rank of ranks) {
+                deck.push({ suit, rank, value: ranks.indexOf(rank) + 1 });
+            }
+        }
+        return deck;
+    }
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function updateUI() {
+        const handDiv = document.getElementById("hand");
+        const tableDiv = document.getElementById("table");
+
+        // テーブルカード
+        tableDiv.innerHTML = tableCard
+            ? `<div class="card">${tableCard.suit}${tableCard.rank}</div>`
+            : "<p>場にカードはありません</p>";
+
+        // プレイヤーの手札
+        handDiv.innerHTML = "";
+        playerHand.forEach((card, index) => {
+            const cardDiv = document.createElement("div");
+            cardDiv.className = `card ${isCardPlayable(card) ? "" : "disabled"}`;
+            cardDiv.textContent = `${card.suit}${card.rank}`;
+            cardDiv.onclick = () => playCard(index);
+            handDiv.appendChild(cardDiv);
+        });
+    }
+
+    function isCardPlayable(card) {
+        if (!tableCard) return true;
+        if (card.rank === "8") return true;
+        return card.value > tableCard.value;
+    }
+
+    function playCard(index) {
+        const card = playerHand[index];
+        if (!isCardPlayable(card)) return;
+        animateCard(document.getElementsByClassName("card")[index], () => {
+            if (card.rank === "8") {
+                alert("8切り！場をリセットします！");
+                tableCard = null;
+            } else {
+                tableCard = card;
+            }
+            playerHand.splice(index, 1);
+            if (playerHand.length === 0) {
+                document.getElementById("result").textContent = "おめでとうございます！あなたの勝ちです！";
+                return;
+            }
+            updateUI();
+            setTimeout(cpuTurn, 1000); // CPUのターン
+        });
+    }
+
+    function cpuTurn() {
+        const playableCards = cpuHand.filter(card => isCardPlayable(card));
+        if (playableCards.length === 0) {
+            alert("CPUはパスしました！");
+            return;
+        }
+        const card = playableCards[0];
+        cpuHand = cpuHand.filter(c => c !== card);
+        tableCard = card;
+        updateUI();
+        if (cpuHand.length === 0) {
+            document.getElementById("result").textContent = "CPUの勝ちです。";
+        }
+    }
+
+    function animateCard(cardElement, callback) {
+        cardElement.classList.add("animate");
+        setTimeout(() => {
+            cardElement.remove();
+            callback();
+        }, 500); // アニメーション時間
+    }
+
+    resetGame();
+</script>
+
 </body>
 </html>
